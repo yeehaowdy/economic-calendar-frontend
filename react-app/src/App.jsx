@@ -1,7 +1,10 @@
 import { useState } from 'react'
-import { NavLink, Link} from "react-router";
-import Navbar from './Components/Navbar';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from './Components/Login';
+import Calandar from './Components/Calandar';
+import Register from './Components/Register';
+import Profil from './Components/Profil';
+import AdminPanel from './Components/AdminPanel';
 
 
 function App() {
@@ -9,14 +12,16 @@ function App() {
   return (
     <>
        <nav>
-          <NavBar>
-            <NavLink to="/" end></NavLink>
-            <NavLink to="/trending" end></NavLink>
-            <NavLink to="/concerts">All Concerts</NavLink>
-            <NavLink to="/account">Account</NavLink>
-          </NavBar>
-          
-          <Login></Login>
+          <Router>
+              <Routes>
+                <Route path="/" element={<Login />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/calandar" element={<Calandar />} />
+                <Route path="/profil" element={<Profil />} />
+                <Route path="/admin_panel" element={<AdminPanel/>}/>
+              </Routes>
+          </Router>
 
     </nav>
     </>

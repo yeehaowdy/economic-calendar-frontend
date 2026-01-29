@@ -1,13 +1,17 @@
 import React from 'react'
-import { NavLink, Link, useNavigate, useLocation} from "react-router";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 
 const Login = () => {
+  const login = async () => {
+    
+  }
+  
   return (
     <div>   
         <input type="text" />
         <input type="text" />
-        
-        <NavLink to="/profil" end><button>Login</button></NavLink>
+        <button onClick={login}>Login</button>
     </div>
   )
 }
