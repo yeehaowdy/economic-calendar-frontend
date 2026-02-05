@@ -1,22 +1,3 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
 
 @keyframes logo-spin {
   from {
@@ -33,10 +14,202 @@
   }
 }
 
-.card {
-  padding: 2em;
+input {
+  border-radius: 6px;
+  height: 30px;
+  margin-top:10px;
+  text-align: center;
 }
 
-.read-the-docs {
-  color: #888;
+button {
+  height: 50px;
+  text-align: center;
+  padding: 10px;
+}
+
+.register {
+  flex-direction: column;
+  display: flex;
+  margin-right: 10px;
+}
+
+.login {
+  flex-direction: column;
+  display: flex;
+  margin-right: 10px;
+}
+
+
+.users {
+  flex-direction: column;
+  display: flex;
+  margin-right: 10px;
+}
+
+.hiba {
+  color: red;
+  margin-bottom: 10px;
+}
+
+.siker {
+  color: green;
+  margin-bottom: 10px;
+}
+
+* {
+  box-sizing: border-box; 
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 95vh; 
+  width: 95vw;
+  max-width: 500px;
+  margin: 2vh auto;
+  position: relative; 
+  border-radius: 6px;
+  padding: 20px;
+}
+
+.navbar-wrapper {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 9999;
+}
+
+.navbar {
+  position: relative; 
+}
+
+.menu-gomb {
+  font-size: 24px;
+  background-color: #444; 
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+  height: auto; 
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;    
+  right: 0;     
+  background-color: #333;
+  min-width: 160px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.5);
+  margin-top: 5px;
+  overflow: hidden; 
+}
+
+.dropdown-menu button {
+  width: 100%;
+  text-align: left;
+  background-color: #333;
+  border: none;
+  color: white;
+  padding: 12px;
+  cursor: pointer;
+  height: auto; 
+}
+
+.dropdown-menu button:hover {
+  background-color: #444;
+}
+
+#Messages-button button:hover {
+  background-color: #444;
+}
+
+.login, .register, .users, .messages {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
+}
+
+input {
+  border-radius: 6px;
+  height: 35px;
+  margin-top: 10px;
+  text-align: center;
+  border: 1px solid #ccc;
+}
+
+button {
+  height: 45px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 6px;
+  border: none;
+  background-color: #222;
+  color: white;
+}
+
+h2 {
+  text-align: center;
+  
+}
+
+.chat-window {
+    width: 100%;
+    height: 350px;
+    overflow-y: auto;
+    background-color: grey;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.bubble {
+    max-width: 70%;
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 12px;
+}
+
+.sajat {
+    align-self: flex-end;
+    background-color: #007bff;
+    color: black;
+}
+
+.mas {
+    align-self: flex-start;
+    background-color: #e9e9eb;
+    color: black;
+
+}
+
+.nev {
+    font-size: 1rem;
+    font-weight: bolder;
+    display: block;
+    margin-bottom: 3px;
+
+}
+
+.input-sor {
+    display: flex;
+    width: 100%;
+    gap: 5px;
+    margin-top: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-sor input {
+    flex: 1;
+    margin-top: 0;
 }
