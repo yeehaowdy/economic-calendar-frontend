@@ -7,9 +7,9 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
- //if (location.pathname === "/login") {
- //  return null;
- //}
+ if (location.pathname === "/login") {
+   return null;
+ }
 
     if (location.pathname === "/users") {
     return null;

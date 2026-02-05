@@ -3,9 +3,11 @@ import "../App.css";
 
 const Profil = () => {
   return (
-    <div>
-      
-    </div>
+      <div className="users">
+            <h2>Fiók kezelés</h2>
+            <button onClick={() => navigate("/login")} style={style1}>Kilépés</button>
+
+      </div>
   )
 }
 
