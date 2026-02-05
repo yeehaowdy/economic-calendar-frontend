@@ -22,8 +22,7 @@ function App() {
                 <Route path="/admin_panel" element={<AdminPanel/>}/>
               </Routes>
           </Router>
-
-    </nav>
+      </nav>
     </>
   )
 }
