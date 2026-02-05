@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from 'react';
+import './App.css'; 
 
 const EconomicCalendar = () => {
+
   // Mock Data: In production, 'timestamp' should be UTC ISO string from your DB
   const initialData = [
     { id: 1, timestamp: '2026-02-05T13:30:00Z', currency: 'USD', title: 'Initial Jobless Claims', impact: 'High', forecast: '215K', previous: '220K' },
@@ -51,11 +53,11 @@ const EconomicCalendar = () => {
   };
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Segoe UI, sans-serif', maxWidth: '1000px', margin: 'auto' }}>
+    <div className='calendar'>
       <h2>Economic Calendar</h2>
 
       {/* Control Bar */}
-      <div style={{ display: 'flex', gap: '15px', marginBottom: '20px', flexWrap: 'wrap', background: '#f8f9fa', padding: '15px', borderRadius: '8px' }}>
+      <div className='calendar-ControlBar'>
         <div>
           <label>Currency: </label>
           <select onChange={(e) => setCurrencyFilter(e.target.value)} value={currencyFilter}>
@@ -85,7 +87,7 @@ const EconomicCalendar = () => {
       </div>
 
       {/* Table */}
-      <table style={{ width: '100%', borderCollapse: 'collapse', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+      <table className="calendar-table">
         <thead style={{ background: '#34495e', color: 'white' }}>
           <tr>
             <th style={thStyle}>Date</th>

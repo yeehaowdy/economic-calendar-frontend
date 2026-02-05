@@ -1,3 +1,25 @@
+.calendar {
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.calendar-ControlBar {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
 
 @keyframes logo-spin {
   from {
