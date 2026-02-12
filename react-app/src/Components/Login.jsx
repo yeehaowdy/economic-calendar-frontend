@@ -2,10 +2,12 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "../App.css";
 
+
 const Login = () => {
 const [felhasznaloNev, setFelhasznaloNev] = useState("");
     const [jelszo, setJelszo] = useState("");
     const [hiba, setHiba] = useState("");
+    const URL = process.env.BACKEND_URL
 
 
     const location = useLocation();
@@ -22,7 +24,7 @@ const [felhasznaloNev, setFelhasznaloNev] = useState("");
   const login = async () => {
     
   try {
-    const response = await fetch("/api/Auth/login", {
+    const response = await fetch(`${URL}/api/Auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ 
@@ -50,7 +52,7 @@ const [felhasznaloNev, setFelhasznaloNev] = useState("");
         <input type="text" placeholder='username'/>
         <input type="text"  placeholder='password'/>
         <button onClick={login}>Login</button>
-        <button></button>
+        <button>Google Login</button>
     </div>
   )
 }

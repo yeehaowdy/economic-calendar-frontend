@@ -2,7 +2,7 @@ import React from 'react'
 import "../App.css";
 
 const Register = () => {
-
+  const URL = process.env.BACKEND_URL
   const [felhasznaloNev, setFelhasznaloNev] = useState("");
   const [jelszo, setJelszo] = useState("");
   const [hiba, setHiba] = useState("");
@@ -21,7 +21,7 @@ const Register = () => {
 
     try {
 
-      const response = await fetch("/api/Auth/register", {
+      const response = await fetch(`${URL}/api/Auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +53,7 @@ const Register = () => {
 
       <input
         type="text"
-        placeholder="Felhasználónév"
+        placeholder="username"
         value={felhasznaloNev}
         onChange={(e) => setFelhasznaloNev(e.target.value)}
         disabled={toltes}
@@ -61,7 +61,7 @@ const Register = () => {
 
       <input
         type="password"
-        placeholder="Jelszó"
+        placeholder="password"
         value={jelszo}
         onChange={(e) => setJelszo(e.target.value)}
         disabled={toltes}
@@ -74,6 +74,7 @@ const Register = () => {
       >
         {toltes ? "Folyamatban..." : "Regisztráció"}
       </button>
+      <button>Goggle register</button>
     </div>
   )
 }
