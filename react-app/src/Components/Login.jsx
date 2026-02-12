@@ -54,6 +54,7 @@ const [felhasznaloNev, setFelhasznaloNev] = useState("");
         <input type="text" placeholder='username'/>
         <input type="text"  placeholder='password'/>
         <button onClick={login}>Login</button>
+        <button onClick={navigate("/register")}>Register</button>
         <button>Google Login</button>
     </div>
   )
