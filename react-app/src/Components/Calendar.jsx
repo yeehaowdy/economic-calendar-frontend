@@ -25,7 +25,7 @@ const Calendar = () => {
     const fetchEvents = async () => {
       try {
         const baseUrl = process.env.BACKEND_URL;
-        const response = await fetch(`${baseUrl}/api/events`);
+        const response = await fetch(`${baseUrl}/api/calendar`);
         if (!response.ok) throw new Error('Failed to fetch data');
         const data = await response.json();
         setEvents(data);
