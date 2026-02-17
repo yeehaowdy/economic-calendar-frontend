@@ -1,146 +1,156 @@
-
-import '../App.css'; 
-
 import React, { useState, useEffect, useMemo } from 'react';
+import './Calendar.css';
 
 const Calendar = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  // Szűrés és Időzóna állapotok
-  const [filterCurrency, setFilterCurrency] = useState('All');
-  const [filterImpact, setFilterImpact] = useState('All');
-  const [timeZone, setTimeZone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  const [showFilters, setShowFilters] = useState(false);
+  const [daysToShow, setDaysToShow] = useState(1); 
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  // Óra frissítése másodpercenként
+  const [filterCurrency, setFilterCurrency] = useState('All');
+  const [filterImpact, setFilterImpact] = useState('All');
+  const [timeZone, setTimeZone] = useState('Europe/Budapest');
+
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  // Adatlekérés
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const baseUrl = process.env.BACKEND_URL;
-        const response = await fetch(`${baseUrl}/api/calendar`);
-        if (!response.ok) throw new Error('Failed to fetch data');
-        const data = await response.json();
+    fetch("http://localhost:3000/api/calendar")
+      .then(res => res.json())
+      .then(data => {
         setEvents(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
         setLoading(false);
-      }
-    };
-    fetchEvents();
+      })
+      .catch(() => setLoading(false));
   }, []);
 
-  // Segédfüggvények a formázáshoz
-  const formatTime = (date, tz, includeSeconds = false) => {
-    return new Intl.DateTimeFormat('en-GB', {
-      timeZone: tz,
-      hour: '2-digit',
-      minute: '2-digit',
-      second: includeSeconds ? '2-digit' : undefined,
-      hour12: false
-    }).format(new Date(date));
-  };
+  const groupedEvents = useMemo(() => {
+    const sorted = [...events].sort((a, b) => new Date(a.date) - new Date(b.date));
+    const todayStr = new Date().toISOString().split('T')[0];
+    
+    const uniqueDays = [...new Set(sorted
+      .map(e => e.date?.split('T')[0])
+      .filter(d => d >= todayStr)
+    )].slice(0, daysToShow);
 
-  const formatDate = (date, tz) => {
-    return new Intl.DateTimeFormat('en-US', {
-      timeZone: tz,
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    }).format(new Date(date));
-  };
-
-  // Szűrés
-  const filteredEvents = useMemo(() => {
-    return events.filter(event => {
-      const matchCurrency = filterCurrency === 'All' || event.country === filterCurrency;
-      const matchImpact = filterImpact === 'All' || event.impact === filterImpact;
-      return matchCurrency && matchImpact;
+    const result = {};
+    uniqueDays.forEach(day => {
+      result[day] = sorted.filter(e => {
+        const isSameDay = e.date?.startsWith(day);
+        const matchCur = filterCurrency === 'All' || e.country === filterCurrency;
+        const matchImp = filterImpact === 'All' || e.impact?.toLowerCase() === filterImpact.toLowerCase();
+        return isSameDay && matchCur && matchImp;
+      });
     });
-  }, [events, filterCurrency, filterImpact]);
+    return result;
+  }, [events, filterCurrency, filterImpact, daysToShow]);
 
-  // Valuta lista a lenyíló menühöz
-  const currencies = useMemo(() => 
-    ['All', ...new Set(events.map(e => e.country))].sort(), 
-    [events]
-  );
+  const currencies = ['All', ...new Set(events.map(e => e.country).filter(Boolean))].sort();
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div style={{padding: '120px', textAlign: 'center', fontWeight: 800, color: '#000'}}>SYNCING...</div>;
 
   return (
-    <div>
-      {/* Kezelőfelület */}
-      <header>
-        <div>
-          <label>Timezone: </label>
-          <select value={timeZone} onChange={(e) => setTimeZone(e.target.value)}>
-            <option value="UTC">UTC</option>
-            <option value="Europe/London">London</option>
-            <option value="Europe/Budapest">Budapest</option>
-            <option value="America/New_York">New York</option>
-          </select>
-
-          <label> Currency: </label>
-          <select value={filterCurrency} onChange={(e) => setFilterCurrency(e.target.value)}>
-            {currencies.map(c => <option key={c} value={c}>{c}</option>)}
-          </select>
-
-          <label> Impact: </label>
-          <select value={filterImpact} onChange={(e) => setFilterImpact(e.target.value)}>
-            <option value="All">All</option>
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
-          </select>
+    <div className="calendar-wrapper">
+      <header className="mo-header">
+        <div className="mo-header-inner">
+          <div className="mo-logo-group">
+            <div className="mo-logo">GO MOON</div>
+            <div className="mo-time-switcher">
+              <span className="mo-market-time">
+                {new Intl.DateTimeFormat('en-GB', {
+                  timeZone, hour: '2-digit', minute: '2-digit', second: '2-digit'
+                }).format(currentTime)}
+              </span>
+              <select className="mo-tz-select" value={timeZone} onChange={(e) => setTimeZone(e.target.value)}>
+                <option value="Europe/Budapest">CET</option>
+                <option value="Europe/London">GMT</option>
+                <option value="America/New_York">EST</option>
+                <option value="UTC">UTC</option>
+              </select>
+            </div>
+          </div>
+          <button className="mo-btn-filter" onClick={() => setShowFilters(!showFilters)}>
+            {showFilters ? 'CLOSE' : 'FILTERS'}
+          </button>
         </div>
-
-        <div style={{ marginTop: '10px' }}>
-          <strong>Current Market Time: {formatTime(currentTime, timeZone, true)}</strong>
+        
+        {/* FILTERS POSITIONED FIXED BELOW HEADER */}
+        <div className={`mo-filter-drawer ${showFilters ? 'open' : ''}`}>
+          <div className="mo-grid">
+            <div className="mo-group">
+              <label>Currency</label>
+              <select className="mo-select" value={filterCurrency} onChange={(e) => setFilterCurrency(e.target.value)}>
+                {currencies.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+            <div className="mo-group">
+              <label>Impact</label>
+              <select className="mo-select" value={filterImpact} onChange={(e) => setFilterImpact(e.target.value)}>
+                <option value="All">All Levels</option>
+                <option value="High">High Impact</option>
+                <option value="Medium">Medium Impact</option>
+                <option value="Low">Low Impact</option>
+              </select>
+            </div>
+          </div>
         </div>
       </header>
 
-      <hr />
+      <main className="mo-list-container">
+        {Object.keys(groupedEvents).map(day => (
+          <div key={day} className="mo-day-group">
+            <div className="mo-day-header">
+              {new Intl.DateTimeFormat('en-GB', { weekday: 'long', month: 'long', day: 'numeric' }).format(new Date(day))}
+            </div>
+            {groupedEvents[day].length > 0 ? groupedEvents[day].map(e => (
+              <div className="mo-row" key={e.id}>
+                <div className="mo-time-col">
+                  <div className="mo-time">{new Intl.DateTimeFormat('en-GB', {timeZone, hour:'2-digit', minute:'2-digit'}).format(new Date(e.date))}</div>
+                </div>
+                <div className="mo-info-col">
+                  <span className="mo-currency">{e.country}</span>
+                  <span className="mo-level-text">{e.impact || 'Low'}</span>
+                </div>
+                <div className="mo-event-title">
+                  <span className="mo-impact-dot" style={{
+                    backgroundColor: e.impact === 'High' ? '#000' : e.impact === 'Medium' ? '#999' : '#e5e7eb',
+                    border: e.impact === 'Low' || !e.impact ? '1px solid #ddd' : 'none'
+                  }}></span>
+                  {e.title}
+                </div>
+                <div className="mo-data-group">
+                  <div className="mo-data-item">
+                    <span className="mo-data-label">ACT</span>
+                    <span className="mo-data-val mo-bold">{e.actual || '—'}</span>
+                  </div>
+                  <div className="mo-data-item">
+                    <span className="mo-data-label">FOR</span>
+                    <span className="mo-data-val">{e.forecast || '—'}</span>
+                  </div>
+                  <div className="mo-data-item">
+                    <span className="mo-data-label">PREV</span>
+                    <span className="mo-data-val">{e.previous || '—'}</span>
+                  </div>
+                </div>
+              </div>
+            )) : <div style={{textAlign: 'center', padding: '20px', fontSize: '11px', color: '#999'}}>No events for this day.</div>}
+          </div>
+        ))}
 
-      {/* Táblázat */}
-      <table border="1" cellPadding="10" style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Currency</th>
-            <th>Impact</th>
-            <th>Name</th>
-            <th>Actual</th>
-            <th>Forecast</th>
-            <th>Previous</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredEvents.map((event) => (
-            <tr key={event.id}>
-              <td>{formatDate(event.date, timeZone)}</td>
-              <td>{formatTime(event.date, timeZone)}</td>
-              <td>{event.country}</td>
-              <td>{event.impact}</td>
-              <td>{event.title}</td>
-              <td>{event.actual || '-'}</td>
-              <td>{event.forecast || '-'}</td>
-              <td>{event.previous || '-'}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {filteredEvents.length === 0 && <p>No events match the filters.</p>}
+        <div className="mo-pagination-group" style={{margin: '0 auto'}}>
+          <button className="mo-btn-action" onClick={() => setDaysToShow(prev => prev + 1)}>
+            Next Day (+1)
+          </button>
+          {daysToShow > 1 && (
+            <button className="mo-btn-action mo-btn-secondary" onClick={() => setDaysToShow(prev => Math.max(1, prev - 1))}>
+              Show Less (-1)
+            </button>
+          )}
+        </div>
+      </main>
     </div>
   );
 };

@@ -1,0 +1,168 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --mo-black: #000000;
+  --mo-white: #ffffff;
+  --mo-gray-100: #f3f4f6;
+  --mo-gray-200: #e5e7eb;
+}
+
+body {
+  background-color: var(--mo-white);
+  color: var(--mo-black);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.calendar-wrapper {
+  width: 100%;
+  max-width: 900px;
+  padding: 120px 15px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* FIXED HEADER */
+.mo-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1001; /* Higher than drawer */
+  background: #ffffff;
+  border-bottom: 1px solid var(--mo-gray-200);
+  display: flex;
+  justify-content: center;
+}
+
+.mo-header-inner {
+  width: 100%;
+  max-width: 900px;
+  padding: 12px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mo-logo { font-size: 16px; font-weight: 800; letter-spacing: -0.02em; }
+
+.mo-time-switcher {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.mo-market-time { font-size: 11px; font-weight: 700; color: #000; }
+.mo-tz-select {
+  background: transparent;
+  border: none;
+  font-size: 10px;
+  font-weight: 700;
+  color: #666;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.mo-btn-filter {
+  background: #000; color: #fff; border: none;
+  padding: 8px 14px; border-radius: 4px;
+  font-size: 11px; font-weight: 700; cursor: pointer;
+}
+
+/* FILTER DRAWER - FIXED BELOW HEADER */
+.mo-filter-drawer {
+  display: none;
+  position: fixed;
+  top: 55px; /* Exactly below header height */
+  left: 0; right: 0;
+  z-index: 1000;
+  background: #ffffff;
+  padding: 20px;
+  border-bottom: 1px solid var(--mo-gray-200);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+
+.mo-filter-drawer.open {
+  display: block;
+}
+
+.mo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.mo-group label {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  color: #999;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+
+.mo-select {
+  width: 100%; height: 38px; background: #fff;
+  border: 1px solid #000; color: #000;
+  padding: 0 10px; font-size: 13px; border-radius: 4px;
+}
+
+/* TABLE STYLES */
+.mo-list-container { width: 100%; }
+.mo-day-group { width: 100%; margin-bottom: 40px; }
+.mo-day-header {
+  font-size: 12px; font-weight: 800;
+  padding: 10px 0; border-bottom: 2px solid #000;
+  margin-bottom: 10px; text-transform: uppercase; text-align: center;
+}
+
+.mo-row {
+  display: flex; align-items: center;
+  padding: 18px 0; border-bottom: 1px solid var(--mo-gray-100);
+  width: 100%;
+}
+
+.mo-time-col { width: 60px; flex-shrink: 0; }
+.mo-time { font-weight: 700; font-size: 13px; }
+.mo-info-col { width: 70px; flex-shrink: 0; padding-left: 10px; }
+.mo-currency { font-size: 11px; font-weight: 800; color: #666; display: block; }
+.mo-level-text { font-size: 9px; font-weight: 700; text-transform: uppercase; color: #999; }
+.mo-event-title { flex-grow: 1; font-size: 13px; line-height: 1.4; padding: 0 15px; }
+
+.mo-impact-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  display: inline-block; margin-right: 8px; flex-shrink: 0;
+}
+
+.mo-data-group {
+  display: flex; gap: 15px; width: 180px;
+  justify-content: flex-end; flex-shrink: 0;
+}
+
+.mo-data-item { width: 50px; text-align: right; }
+.mo-data-label { display: block; font-size: 8px; font-weight: 800; color: #999; }
+.mo-data-val { font-size: 11px; font-weight: 800; }
+.mo-bold { color: #000; }
+
+.mo-pagination-group { display: flex; gap: 15px; margin-top: 20px; width: 100%; max-width: 400px; }
+.mo-btn-action {
+  flex: 1; padding: 14px; background: #000; color: #fff;
+  border: 1px solid #000; font-weight: 800; font-size: 11px;
+  text-transform: uppercase; border-radius: 4px; cursor: pointer;
+}
+.mo-btn-secondary { background: #fff; color: #000; }
+
+@media (max-width: 600px) {
+  .mo-data-group { width: 150px; gap: 8px; }
+  .mo-time-col { width: 50px; }
+  .mo-info-col { width: 55px; }
+}
