@@ -1,3 +1,4 @@
+/* ALAPBEÁLLÍTÁSOK */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -17,53 +18,74 @@ body {
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
+  display: block; 
 }
 
+/* FŐ WRAPPER */
 .calendar-wrapper {
   width: 100%;
-  max-width: 900px;
-  padding: 120px 15px 60px;
+  padding-top: 100px; /* Megnövelve a nagyobb header miatt */
+  padding-bottom: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+/* SÖTÉTÍTŐ RÉTEG (OVERLAY) */
+.mo-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 1000; /* A tartalom felett, de a fejléc alatt */
 }
 
 /* FIXED HEADER */
 .mo-header {
   position: fixed;
   top: 0; left: 0; right: 0;
-  z-index: 1001; /* Higher than drawer */
+  z-index: 1001; 
   background: #ffffff;
   border-bottom: 1px solid var(--mo-gray-200);
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .mo-header-inner {
   width: 100%;
   max-width: 900px;
-  padding: 12px 15px;
+  padding: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.mo-logo { font-size: 16px; font-weight: 800; letter-spacing: -0.02em; }
+.mo-logo { 
+  font-size: 20px; /* Megnövelve */
+  font-weight: 800; 
+  letter-spacing: -0.02em; 
+}
 
 .mo-time-switcher {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 2px;
+  gap: 12px;
 }
 
-.mo-market-time { font-size: 11px; font-weight: 700; color: #000; }
+.mo-market-time { 
+  font-size: 14px; /* Megnövelve */
+  font-weight: 700; 
+  color: #000; 
+}
+
 .mo-tz-select {
   background: transparent;
   border: none;
-  font-size: 10px;
+  font-size: 13px; /* Megnövelve */
   font-weight: 700;
   color: #666;
   cursor: pointer;
@@ -71,22 +93,30 @@ body {
 }
 
 .mo-btn-filter {
-  background: #000; color: #fff; border: none;
-  padding: 8px 14px; border-radius: 4px;
-  font-size: 11px; font-weight: 700; cursor: pointer;
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 14px; /* Megnövelve */
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
 }
 
-/* FILTER DRAWER - FIXED BELOW HEADER */
+.mo-btn-filter:hover {
+  opacity: 0.8;
+}
+
+/* FILTER DRAWER (LENYÍLÓ PANEL) */
 .mo-filter-drawer {
   display: none;
-  position: fixed;
-  top: 55px; /* Exactly below header height */
-  left: 0; right: 0;
-  z-index: 1000;
+  width: 100%;
   background: #ffffff;
-  padding: 20px;
+  padding: 25px;
   border-bottom: 1px solid var(--mo-gray-200);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
 }
 
 .mo-filter-drawer.open {
@@ -95,66 +125,248 @@ body {
 
 .mo-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
   max-width: 900px;
   margin: 0 auto;
 }
 
 .mo-group label {
   display: block;
-  font-size: 10px;
+  font-size: 13px; /* Megnövelve */
   font-weight: 800;
   color: #999;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
   text-transform: uppercase;
 }
 
-.mo-select {
-  width: 100%; height: 38px; background: #fff;
-  border: 1px solid #000; color: #000;
-  padding: 0 10px; font-size: 13px; border-radius: 4px;
+/* CHECKBOX LISTA */
+/* CHIP LISTA KONTÉNER */
+.mo-checkbox-list {
+  display: flex;
+  flex-wrap: wrap; /* Egymás mellé kerülnek, ha nem férnek el, törnek */
+  gap: 10px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 5px;
 }
 
-/* TABLE STYLES */
-.mo-list-container { width: 100%; }
-.mo-day-group { width: 100%; margin-bottom: 40px; }
+/* REJTETT CHECKBOX */
+.mo-hidden-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* A SZÖVEG, AMI GOMBKÉNT FUNKCIONÁL */
+.mo-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  background: #f3f4f6; /* Világosszürke alap */
+  border: 1px solid #e5e7eb;
+  border-radius: 50px; /* Lekerekített szélek */
+  font-size: 14px;
+  font-weight: 700;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+/* HA AKTÍV (KI VAN VÁLASZTVA) */
+.mo-chip.active {
+  background: #000; /* Fekete háttér */
+  color: #fff;      /* Fehér szöveg */
+  border-color: #000;
+}
+
+/* HOVER HATÁS */
+.mo-chip:hover {
+  border-color: #000;
+  color: #000;
+}
+
+.mo-chip.active:hover {
+  background: #333;
+  color: #fff;
+}
+
+/* --- IMPACT CHIPEK FINOMÍTOTT SZÍNEI --- */
+
+/* HIGH (Piros) */
+.mo-chip-high {
+  background: #fff0f0;
+  border: 1px solid #ffcccc;
+  color: #cc0000;
+}
+.mo-chip-high.active {
+  background: #ff6666; /* Élénk piros helyett lágyabb korallos piros */
+  border-color: #e65c5c;
+  color: #fff;
+}
+.mo-chip-high.active:hover {
+  border-color: #b30000; /* Ízlésesen sötétebb piros keret */
+  background: #ff5c5c;
+}
+
+/* MEDIUM (Narancs) */
+.mo-chip-medium {
+  background: #fff9e6;
+  border: 1px solid #ffeeb3;
+  color: #b37700;
+}
+.mo-chip-medium.active {
+  background: #ffb347; /* Neon narancs helyett barackosabb narancs */
+  border-color: #f0a33d;
+  color: #fff;
+}
+.mo-chip-medium.active:hover {
+  border-color: #cc7a00; /* Ízlésesen sötétebb narancs keret */
+  background: #ffa830;
+}
+
+/* LOW (Zöld) */
+.mo-chip-low {
+  background: #e6f9eb;
+  border: 1px solid #c2f0d1;
+  color: #068a2a;
+}
+.mo-chip-low.active {
+  background: #66cc8a; /* Erős zöld helyett lágyabb menta-zöld */
+  border-color: #5cb87c;
+  color: #fff;
+}
+.mo-chip-low.active:hover {
+  border-color: #00802b; /* Ízlésesen sötétebb zöld keret */
+  background: #59c27f;
+}
+
+/* --- ÁLTALÁNOS HOVER SZABÁLYOK --- */
+
+/* Ha aktív, ne legyen sötétszürke a háttér, csak a keret változzon a fentiek szerint */
+.mo-chip.active:hover {
+  transform: translateY(-1px);
+  filter: none; /* Kivesszük a brightness-t, hogy tiszta maradjon a szín */
+}
+
+/* Nem aktív chipek hover állapota (Valuták és alap impactek) */
+.mo-chip:not(.active):hover {
+  background: #f0f0f0;
+  border-color: #999; /* Nem ugrik rögtön feketére, csak sötétedik */
+  color: #333;
+}
+
+/* Valuták és ALL gomb aktív állapotban (Visszafogottabb fekete) */
+.mo-chip.active:not(.mo-chip-high):not(.mo-chip-medium):not(.mo-chip-low) {
+  background: #444; /* Mélyszürke a koromfekete helyett */
+  border-color: #333;
+}
+.mo-chip.active:not(.mo-chip-high):not(.mo-chip-medium):not(.mo-chip-low):hover {
+  border-color: #000;
+  background: #333;
+}
+
+/* FILTER FOOTER & CLEAR BUTTON */
+.mo-filter-footer {
+  max-width: 900px;
+  margin: 20px auto 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid var(--mo-gray-100);
+  padding-top: 20px;
+}
+
+.mo-btn-clear {
+  background: transparent;
+  border: 1px solid #ccc;
+  color: #666;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.mo-btn-clear:hover {
+  border-color: #000;
+  color: #000;
+  background: #f5f5f5;
+}
+
+/* LISTA KONTÉNER ÉS NAVIGÁCIÓ */
+.mo-list-container { 
+  width: 100%; 
+  max-width: 900px; 
+  padding: 0 15px;
+}
+
+.mo-pagination-group { 
+  display: flex; 
+  gap: 12px; 
+  margin-bottom: 30px; 
+}
+
+.mo-btn-action {
+  flex: 1;
+  padding: 14px;
+  background: #000;
+  color: #fff;
+  border: 1px solid #000;
+  font-weight: 800;
+  font-size: 14px; /* Megnövelve */
+  text-transform: uppercase;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.mo-btn-secondary { background: #fff; color: #000; }
+.mo-btn-secondaryToday { flex: 0.5; background: #fff; color: #000; }
+
 .mo-day-header {
-  font-size: 12px; font-weight: 800;
-  padding: 10px 0; border-bottom: 2px solid #000;
-  margin-bottom: 10px; text-transform: uppercase; text-align: center;
+  font-size: 16px; /* Megnövelve */
+  font-weight: 800;
+  padding: 15px 0;
+  border-bottom: 2px solid #000;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  text-align: center;
 }
 
+/* TÁBLÁZAT SOROK (Eredeti kompakt méretek) */
 .mo-row {
-  display: flex; align-items: center;
-  padding: 18px 0; border-bottom: 1px solid var(--mo-gray-100);
-  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--mo-gray-100);
 }
 
 .mo-time-col { width: 60px; flex-shrink: 0; }
 .mo-time { font-weight: 700; font-size: 13px; }
-.mo-info-col { width: 70px; flex-shrink: 0; padding-left: 10px; }
+
+.mo-info-col { width: 75px; flex-shrink: 0; padding-left: 10px; }
 .mo-currency { font-size: 11px; font-weight: 800; color: #666; display: block; }
-.mo-level-text { font-size: 9px; font-weight: 700; text-transform: uppercase; color: #999; }
+.mo-level-text { font-size: 9px; font-weight: 700; text-transform: uppercase; }
+
 .mo-event-title {
   flex: 1;
-  display: flex;
-  align-items: center;
   font-size: 13px;
   line-height: 1.4;
   padding: 0 15px;
-  min-width: 300px;
   word-break: break-word;
 }
 
-.mo-impact-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  display: inline-block; margin-right: 8px; flex-shrink: 0;
-}
-
 .mo-data-group {
-  display: flex; gap: 15px; width: 180px;
-  justify-content: flex-end; flex-shrink: 0;
+  display: flex;
+  gap: 15px;
+  width: 180px;
+  justify-content: flex-end;
+  flex-shrink: 0;
 }
 
 .mo-data-item { width: 50px; text-align: right; }
@@ -162,17 +374,29 @@ body {
 .mo-data-val { font-size: 11px; font-weight: 800; }
 .mo-bold { color: #000; }
 
-.mo-pagination-group { display: flex; gap: 15px; margin-top: 20px; width: 100%; max-width: 400px; }
-.mo-btn-action {
-  flex: 1; padding: 14px; background: #000; color: #fff;
-  border: 1px solid #000; font-weight: 800; font-size: 11px;
-  text-transform: uppercase; border-radius: 4px; cursor: pointer;
+/* EGYÉB */
+.mo-syncing { 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  height: 100vh; 
+  font-weight: 800; 
+  font-size: 18px;
 }
-.mo-btn-secondary { background: #fff; color: #000; }
 
+.mo-no-events { 
+  text-align: center; 
+  padding: 60px; 
+  font-size: 13px; 
+  color: #999; 
+  text-transform: uppercase; 
+  font-weight: 800; 
+}
+
+/* MOBIL FINOMÍTÁS */
 @media (max-width: 600px) {
-  .mo-data-group { width: 150px; gap: 8px; }
-  .mo-time-col { width: 50px; }
-  .mo-info-col { width: 55px; }
-  .mo-event-title { min-width: 200px; padding: 0 8px; font-size: 12px;}
+  .mo-header-inner { padding: 10px; }
+  .mo-logo { font-size: 16px; }
+  .mo-data-group { width: 130px; gap: 5px; }
+  .mo-event-title { min-width: 120px; font-size: 12px; }
 }
