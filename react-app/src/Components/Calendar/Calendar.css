@@ -136,7 +136,16 @@ body {
 .mo-info-col { width: 70px; flex-shrink: 0; padding-left: 10px; }
 .mo-currency { font-size: 11px; font-weight: 800; color: #666; display: block; }
 .mo-level-text { font-size: 9px; font-weight: 700; text-transform: uppercase; color: #999; }
-.mo-event-title { flex-grow: 1; font-size: 13px; line-height: 1.4; padding: 0 15px; }
+.mo-event-title {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 0 15px;
+  min-width: 300px;
+  word-break: break-word;
+}
 
 .mo-impact-dot {
   width: 6px; height: 6px; border-radius: 50%;
@@ -165,4 +174,5 @@ body {
   .mo-data-group { width: 150px; gap: 8px; }
   .mo-time-col { width: 50px; }
   .mo-info-col { width: 55px; }
+  .mo-event-title { min-width: 200px; padding: 0 8px; font-size: 12px;}
 }

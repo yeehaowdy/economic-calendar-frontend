@@ -8,14 +8,34 @@ const Calendar = () => {
   const [daysToShow, setDaysToShow] = useState(1); 
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  const [filterCurrency, setFilterCurrency] = useState('All');
-  const [filterImpact, setFilterImpact] = useState('All');
-  const [timeZone, setTimeZone] = useState('Europe/Budapest');
-
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
+  const [filterCurrency, setFilterCurrency] = useState(() => {
+      return localStorage.getItem('mo-filter-currency') || 'All';
+    });
+  
+    const [filterImpact, setFilterImpact] = useState(() => {
+      return localStorage.getItem('mo-filter-impact') || 'All';
+    });
+  
+    const [timeZone, setTimeZone] = useState(() => {
+      return localStorage.getItem('mo-timezone') || 'Europe/Budapest';
+    });
+  
+    useEffect(() => {
+      const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+      return () => clearInterval(timer);
+    }, []);
+  
+    useEffect(() => {
+      localStorage.setItem('mo-filter-currency', filterCurrency);
+    }, [filterCurrency]);
+  
+    useEffect(() => {
+      localStorage.setItem('mo-filter-impact', filterImpact);
+    }, [filterImpact]);
+  
+    useEffect(() => {
+      localStorage.setItem('mo-timezone', timeZone);
+    }, [timeZone]);
 
   useEffect(() => {
     fetch("http://localhost:3000/api/calendar")
@@ -57,7 +77,7 @@ const Calendar = () => {
       <header className="mo-header">
         <div className="mo-header-inner">
           <div className="mo-logo-group">
-            <div className="mo-logo">GO MOON</div>
+            <div className="mo-logo">Economic Calendar</div>
             <div className="mo-time-switcher">
               <span className="mo-market-time">
                 {new Intl.DateTimeFormat('en-GB', {
@@ -89,10 +109,10 @@ const Calendar = () => {
             <div className="mo-group">
               <label>Impact</label>
               <select className="mo-select" value={filterImpact} onChange={(e) => setFilterImpact(e.target.value)}>
-                <option value="All">All Levels</option>
-                <option value="High">High Impact</option>
-                <option value="Medium">Medium Impact</option>
-                <option value="Low">Low Impact</option>
+                <option value="All">All</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
               </select>
             </div>
           </div>
@@ -112,13 +132,11 @@ const Calendar = () => {
                 </div>
                 <div className="mo-info-col">
                   <span className="mo-currency">{e.country}</span>
-                  <span className="mo-level-text">{e.impact || 'Low'}</span>
+                  <span className="mo-level-text" style={{ color:
+                    e.impact === 'High' ? '#ff0000' : e.impact === 'Medium' ? '#e89b00' : '#09b537'
+                  }}>{e.impact || 'Low'}</span>
                 </div>
                 <div className="mo-event-title">
-                  <span className="mo-impact-dot" style={{
-                    backgroundColor: e.impact === 'High' ? '#000' : e.impact === 'Medium' ? '#999' : '#e5e7eb',
-                    border: e.impact === 'Low' || !e.impact ? '1px solid #ddd' : 'none'
-                  }}></span>
                   {e.title}
                 </div>
                 <div className="mo-data-group">
@@ -142,11 +160,11 @@ const Calendar = () => {
 
         <div className="mo-pagination-group" style={{margin: '0 auto'}}>
           <button className="mo-btn-action" onClick={() => setDaysToShow(prev => prev + 1)}>
-            Next Day (+1)
+            Show More
           </button>
           {daysToShow > 1 && (
             <button className="mo-btn-action mo-btn-secondary" onClick={() => setDaysToShow(prev => Math.max(1, prev - 1))}>
-              Show Less (-1)
+              Show Less
             </button>
           )}
         </div>

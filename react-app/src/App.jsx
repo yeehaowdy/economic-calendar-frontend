@@ -1,10 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from './Components/Login';
-import Calendar from './Components/Calendar';
-import Register from './Components/Register';
-import Profil from './Components/Profil';
-import AdminPanel from './Components/AdminPanel';
+import NavBar from './Components/Navbar/Navbar';
+import Login from './Components/Login/Login';
+import Calendar from './Components/Calendar/Calendar';
+import Register from './Components/Register/Register';
+import Profil from './Components/Profile/Profile';
+import AdminPanel from './Components/AdminPanel/AdminPanel';
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
     <>
        <nav>
           <Router>
+              {/*<NavBar />*/}
               <Routes>
                 <Route path="/" element={<Calendar />} />
                 <Route path="/login" element={<Login />} />
