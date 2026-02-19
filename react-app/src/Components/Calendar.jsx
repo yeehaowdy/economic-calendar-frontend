@@ -1,126 +1,148 @@
-import React, { useState, useMemo } from 'react';
-import './App.css'; 
+import React from 'react';
+import '../App.css'; 
 
-const EconomicCalendar = () => {
+import React, { useState, useEffect, useMemo } from 'react';
 
-  // Mock Data: In production, 'timestamp' should be UTC ISO string from your DB
-  const initialData = [
-    { id: 1, timestamp: '2026-02-05T13:30:00Z', currency: 'USD', title: 'Initial Jobless Claims', impact: 'High', forecast: '215K', previous: '220K' },
-    { id: 2, timestamp: '2026-02-05T14:45:00Z', currency: 'EUR', title: 'ECB Press Conference', impact: 'High', forecast: '-', previous: '-' },
-    { id: 3, timestamp: '2026-02-06T09:00:00Z', currency: 'GBP', title: 'GDP MoM', impact: 'Medium', forecast: '0.2%', previous: '0.1%' },
-    { id: 4, timestamp: '2026-02-06T10:00:00Z', currency: 'EUR', title: 'CPI Flash Estimate', impact: 'Medium', forecast: '2.4%', previous: '2.5%' },
-  ];
+const Calendar = () => {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // States
-  const [currencyFilter, setCurrencyFilter] = useState('All');
-  const [impactFilter, setImpactFilter] = useState('All');
-  const [timezone, setTimezone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  // Szűrés és Időzóna állapotok
+  const [filterCurrency, setFilterCurrency] = useState('All');
+  const [filterImpact, setFilterImpact] = useState('All');
+  const [timeZone, setTimeZone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
-  // Timezone list (Common ones, but you can add more)
-  const timezones = [
-    { label: 'UTC', value: 'UTC' },
-    { label: 'London (GMT)', value: 'Europe/London' },
-    { label: 'New York (EST/EDT)', value: 'America/New_York' },
-    { label: 'Tokyo (JST)', value: 'Asia/Tokyo' },
-    { label: 'Local Time', value: Intl.DateTimeFormat().resolvedOptions().timeZone },
-  ];
+  // Óra frissítése másodpercenként
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
-  // Filter Logic
+  // Adatlekérés
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const baseUrl = process.env.BACKEND_URL;
+        const response = await fetch(`${baseUrl}/api/events`);
+        if (!response.ok) throw new Error('Failed to fetch data');
+        const data = await response.json();
+        setEvents(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEvents();
+  }, []);
+
+  // Segédfüggvények a formázáshoz
+  const formatTime = (date, tz, includeSeconds = false) => {
+    return new Intl.DateTimeFormat('en-GB', {
+      timeZone: tz,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: includeSeconds ? '2-digit' : undefined,
+      hour12: false
+    }).format(new Date(date));
+  };
+
+  const formatDate = (date, tz) => {
+    return new Intl.DateTimeFormat('en-US', {
+      timeZone: tz,
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    }).format(new Date(date));
+  };
+
+  // Szűrés
   const filteredEvents = useMemo(() => {
-    return initialData.filter(event => {
-      const matchCurrency = currencyFilter === 'All' || event.currency === currencyFilter;
-      const matchImpact = impactFilter === 'All' || event.impact === impactFilter;
+    return events.filter(event => {
+      const matchCurrency = filterCurrency === 'All' || event.country === filterCurrency;
+      const matchImpact = filterImpact === 'All' || event.impact === filterImpact;
       return matchCurrency && matchImpact;
     });
-  }, [currencyFilter, impactFilter]);
+  }, [events, filterCurrency, filterImpact]);
 
-  // Formatting Helper for Time/Date based on selected Zone
-  const formatDateTime = (timestamp, zone) => {
-    const dateObj = new Date(timestamp);
-    const dateOptions = { month: 'short', day: 'numeric', year: 'numeric', timeZone: zone };
-    const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: zone };
+  // Valuta lista a lenyíló menühöz
+  const currencies = useMemo(() => 
+    ['All', ...new Set(events.map(e => e.country))].sort(), 
+    [events]
+  );
 
-    return {
-      date: new Intl.DateTimeFormat('en-US', dateOptions).format(dateObj),
-      time: new Intl.DateTimeFormat('en-GB', timeOptions).format(dateObj),
-    };
-  };
-
-  const getImpactColor = (impact) => {
-    if (impact === 'High') return '#e74c3c';
-    if (impact === 'Medium') return '#f39c12';
-    return '#27ae60';
-  };
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className='calendar'>
-      <h2>Economic Calendar</h2>
-
-      {/* Control Bar */}
-      <div className='calendar-ControlBar'>
+    <div>
+      {/* Kezelőfelület */}
+      <header>
         <div>
-          <label>Currency: </label>
-          <select onChange={(e) => setCurrencyFilter(e.target.value)} value={currencyFilter}>
-            <option value="All">All Currencies</option>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-            <option value="GBP">GBP</option>
+          <label>Timezone: </label>
+          <select value={timeZone} onChange={(e) => setTimeZone(e.target.value)}>
+            <option value="UTC">UTC</option>
+            <option value="Europe/London">London</option>
+            <option value="Europe/Budapest">Budapest</option>
+            <option value="America/New_York">New York</option>
           </select>
-        </div>
 
-        <div>
-          <label>Impact: </label>
-          <select onChange={(e) => setImpactFilter(e.target.value)} value={impactFilter}>
-            <option value="All">All Impact</option>
+          <label> Currency: </label>
+          <select value={filterCurrency} onChange={(e) => setFilterCurrency(e.target.value)}>
+            {currencies.map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
+
+          <label> Impact: </label>
+          <select value={filterImpact} onChange={(e) => setFilterImpact(e.target.value)}>
+            <option value="All">All</option>
             <option value="High">High</option>
             <option value="Medium">Medium</option>
             <option value="Low">Low</option>
           </select>
         </div>
 
-        <div>
-          <label>Timezone: </label>
-          <select onChange={(e) => setTimezone(e.target.value)} value={timezone}>
-            {timezones.map(tz => <option key={tz.value} value={tz.value}>{tz.label}</option>)}
-          </select>
+        <div style={{ marginTop: '10px' }}>
+          <strong>Current Market Time: {formatTime(currentTime, timeZone, true)}</strong>
         </div>
-      </div>
+      </header>
 
-      {/* Table */}
-      <table className="calendar-table">
-        <thead style={{ background: '#34495e', color: 'white' }}>
+      <hr />
+
+      {/* Táblázat */}
+      <table border="1" cellPadding="10" style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead>
           <tr>
-            <th style={thStyle}>Date</th>
-            <th style={thStyle}>Time</th>
-            <th style={thStyle}>Cur.</th>
-            <th style={thStyle}>Event</th>
-            <th style={thStyle}>Impact</th>
-            <th style={thStyle}>Forecast</th>
-            <th style={thStyle}>Previous</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Currency</th>
+            <th>Impact</th>
+            <th>Name</th>
+            <th>Actual</th>
+            <th>Forecast</th>
+            <th>Previous</th>
           </tr>
         </thead>
         <tbody>
-          {filteredEvents.map((event) => {
-            const { date, time } = formatDateTime(event.timestamp, timezone);
-            return (
-              <tr key={event.id} style={{ borderBottom: '1px solid #ddd' }}>
-                <td style={tdStyle}>{date}</td>
-                <td style={tdStyle}>{time}</td>
-                <td style={tdStyle}><strong>{event.currency}</strong></td>
-                <td style={tdStyle}>{event.title}</td>
-                <td style={{ ...tdStyle, color: getImpactColor(event.impact), fontWeight: 'bold' }}>{event.impact}</td>
-                <td style={tdStyle}>{event.forecast}</td>
-                <td style={tdStyle}>{event.previous}</td>
-              </tr>
-            );
-          })}
+          {filteredEvents.map((event) => (
+            <tr key={event.id}>
+              <td>{formatDate(event.date, timeZone)}</td>
+              <td>{formatTime(event.date, timeZone)}</td>
+              <td>{event.country}</td>
+              <td>{event.impact}</td>
+              <td>{event.title}</td>
+              <td>{event.actual || '-'}</td>
+              <td>{event.forecast || '-'}</td>
+              <td>{event.previous || '-'}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
+
+      {filteredEvents.length === 0 && <p>No events match the filters.</p>}
     </div>
   );
 };
 
-const thStyle = { padding: '12px', textAlign: 'left', fontSize: '14px' };
-const tdStyle = { padding: '12px', fontSize: '14px' };
-
-export default EconomicCalendar;
+export default Calendar;

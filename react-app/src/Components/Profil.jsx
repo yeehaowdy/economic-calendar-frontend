@@ -1,25 +1,9 @@
-/**import React from 'react'
-import "../App.css";
-
-const Profil = () => {
-  return (
-      <div className="users">
-            <h2>Manage profile</h2>
-            <img src="" alt="Profile picture" />
-            <button onClick={() => navigate("/login")} style={style1}>Kilépés</button>
-
-      </div>
-  )
-}
-
-export default Profil**/
-//új kód:
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase'; // ide jön a firebase
 import { doc, getDoc } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
-import "../App.css";
+import "../Profil.css";
 
 const Profil = () => {
     const [userData, setUserData] = useState(null);
