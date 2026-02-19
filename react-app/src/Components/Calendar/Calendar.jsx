@@ -36,13 +36,16 @@ const Calendar = () => {
   }, [filterCurrency, filterImpact, timeZone]);
 
   useEffect(() => {
-    fetch(`${process.env.BACKEND_URL}/api/calendar`)
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/calendar`)
       .then(res => res.json())
       .then(data => {
         setEvents(Array.isArray(data) ? data : []);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(err => {
+      console.error("Hiba:", err);
+      setLoading(false);
+    });
   }, []);
 
   const handleToggleFilter = (value, currentList, setList) => {
