@@ -36,7 +36,7 @@ const Calendar = () => {
   }, [filterCurrency, filterImpact, timeZone]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/calendar")
+    fetch(`${process.env.BACKEND_URL}/api/calendar`)
       .then(res => res.json())
       .then(data => {
         setEvents(Array.isArray(data) ? data : []);
