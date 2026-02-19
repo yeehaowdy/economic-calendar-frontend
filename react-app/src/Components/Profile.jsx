@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase'; // ide jön a firebase
 import { doc, getDoc } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
-import "../Profil.css";
+import "../Profile.css";
 
-const Profil = () => {
+const Profile = () => {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -81,4 +81,4 @@ const Profil = () => {
     );
 };
 
-export default Profil;
+export default Profile;
