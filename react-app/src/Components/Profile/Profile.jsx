@@ -13,7 +13,7 @@ const Profile = ({ userId }) => {
         const response = await fetch(`/api/user/${userId}`);
         
         if (!response.ok) {
-          throw new Error('Nem sikerült lekérni a profiladatokat.');
+          throw new Error('Could not get profile data.');
         }
 
         const result = await response.json();
@@ -35,8 +35,8 @@ const Profile = ({ userId }) => {
     }
   }, [userId]);
 
-  if (loading) return <div className="mo-status-container">Betöltés...</div>;
-  if (error) return <div className="mo-status-container mo-error">Hiba: {error}</div>;
+  if (loading) return <div className="mo-status-container">Loading...</div>;
+  if (error) return <div className="mo-status-container mo-error">Error: {error}</div>;
 
   return (
     <div className="profile-wrapper">
@@ -54,17 +54,17 @@ const Profile = ({ userId }) => {
 
       <div className="profile-info-list">
         <div className="profile-info-item">
-          <span className="info-label">Rendszer ID</span>
+          <span className="info-label">System ID</span>
           <span className="info-value">{user.id}</span>
         </div>
         
         <div className="profile-info-item">
-          <span className="info-label">E-mail cím</span>
+          <span className="info-label">E-mail:</span>
           <span className="info-value">{user.email}</span>
         </div>
 
         <div className="profile-info-item">
-          <span className="info-label">Megjelenítendő név</span>
+          <span className="info-label">Display name:</span>
           <span className="info-value">{user.displayName}</span>
         </div>
       </div>
