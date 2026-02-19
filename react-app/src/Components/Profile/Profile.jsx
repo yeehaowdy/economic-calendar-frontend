@@ -35,37 +35,39 @@ const Profile = ({ userId }) => {
     }
   }, [userId]);
 
-  if (loading) return <div>Betöltés...</div>;
-  if (error) return <div>Hiba: {error}</div>;
-  if (!user) return <div>Nincs megjeleníthető profil.</div>;
+  if (loading) return <div className="mo-status-container">Betöltés...</div>;
+  if (error) return <div className="mo-status-container mo-error">Hiba: {error}</div>;
 
   return (
-    <div className="profile-container">
-      <header>
-        <img 
-          src={user.photoURL || 'https://via.placeholder.com/150'} 
-          alt={`${user.displayName} profilképe`} 
-        />
-        <h1>{user.displayName}</h1>
-        {user.admin && <span className="admin-badge">Adminisztrátor</span>}
+    <div className="profile-wrapper">
+      <header className="profile-header">
+        <div className="profile-pic-container">
+          <img 
+            className="profile-pic"
+            src={user.photoURL || 'https://via.placeholder.com/150'} 
+            alt="Profilkép" 
+          />
+        </div>
+        <h1 className="profile-name">{user.displayName}</h1>
+        {user.admin && <span className="admin-badge">Admin:</span>}
       </header>
 
-      <section className="profile-details">
-        <div>
-          <label>Rendszer ID:</label>
-          <span>{user.id}</span>
+      <div className="profile-info-list">
+        <div className="profile-info-item">
+          <span className="info-label">Rendszer ID</span>
+          <span className="info-value">{user.id}</span>
         </div>
         
-        <div>
-          <label>E-mail cím:</label>
-          <span>{user.email}</span>
+        <div className="profile-info-item">
+          <span className="info-label">E-mail cím</span>
+          <span className="info-value">{user.email}</span>
         </div>
 
-        <div>
-          <label>Megjelenítendő név:</label>
-          <span>{user.displayName}</span>
+        <div className="profile-info-item">
+          <span className="info-label">Megjelenítendő név</span>
+          <span className="info-value">{user.displayName}</span>
         </div>
-      </section>
+      </div>
     </div>
   );
 };
