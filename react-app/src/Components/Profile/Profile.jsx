@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { auth, db } from '../firebase'; // ide jön a firebase
-import { doc, getDoc } from 'firebase/firestore';
-import { signOut } from 'firebase/auth';
-import "../Profile.css";
+import "./Profile.css";
 
 const Profile = () => {
     const [userData, setUserData] = useState(null);
