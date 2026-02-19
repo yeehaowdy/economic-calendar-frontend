@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import "../App.css";
+import "./Register.css";
 
 const Register = () => {
   const URL = process.env.BACKEND_URL
