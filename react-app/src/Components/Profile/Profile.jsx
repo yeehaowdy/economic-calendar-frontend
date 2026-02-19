@@ -4,13 +4,14 @@ const Profile = ({ userId }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const URL = process.env.REACT_APP_BACKEND_URL
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         setLoading(true);
         // Itt hívd meg a saját API végpontodat, ami a backend profile.js-t használja
-        const response = await fetch(`/api/user/${userId}`);
+        const response = await fetch(`${URL}/api/user/${userId}`);
         
         if (!response.ok) {
           throw new Error('Could not get profile data.');

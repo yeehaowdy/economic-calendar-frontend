@@ -1,84 +1,100 @@
-import React from 'react'
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import "./Register.css";
 
 const Register = () => {
-  const URL = process.env.BACKEND_URL
-  const [felhasznaloNev, setFelhasznaloNev] = useState("");
-  const [jelszo, setJelszo] = useState("");
-  const [hiba, setHiba] = useState("");
-  const [toltes, setToltes] = useState(false); 
+  const URL = process.env.REACT_APP_BACKEND_URL;
+  
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); 
 
   const navigate = useNavigate();
 
   const registerHandler = async () => {
-    if (!felhasznaloNev || !jelszo) {
-      setHiba("Minden mező kitöltése kötelező!");
+    if (!username || !password || !email) {
+      setError("All fields are required!");
       return;
     }
 
-    setHiba("");
-    setToltes(true);
+    setError("");
+    setLoading(true);
 
     try {
-
-      const response = await fetch(`${URL}/api/Auth/register`, {
+      // Ensure the URL matches your folder structure (e.g., /api/auth/register)
+      const response = await fetch(`${URL}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ felhasznaloNev, jelszo }),
+        // 'felhasznaloNev' stays here to match your current register.js backend code
+        body: JSON.stringify({ 
+          felhasznaloNev: username, 
+          email, 
+          jelszo: password 
+        }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
         navigate("/", {
-          state: { uzenet: "Sikeres regisztráció ✅" }
+          state: { message: "Registration successful" }
         });
       } else {
-        setHiba(data.message || "Hiba történt a regisztráció során.");
+        setError(data.message || "An error occurred during registration.");
       }
-    } catch (error) {
-      setHiba("Nem sikerült kapcsolódni a szerverhez.");
+    } catch (err) {
+      setError("Could not connect to the server.");
+      console.error("Error:", err);
     } finally {
-      setToltes(false);
+      setLoading(false);
     }
   };
 
   return (
     <div className="register">
-      <h2>Regisztráció</h2>
+      <h2>Create Account</h2>
 
-      {hiba && <p className="hiba" style={{color: "red", textAlign:"center"}}>{hiba}</p>}
+      {error && <p className="error-message" style={{color: "red", textAlign:"center", fontWeight: "bold"}}>{error}</p>}
 
       <input
         type="text"
-        placeholder="username"
-        value={felhasznaloNev}
-        onChange={(e) => setFelhasznaloNev(e.target.value)}
-        disabled={toltes}
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        disabled={loading}
+      />
+
+      <input
+        type="email"
+        placeholder="Email Address"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        disabled={loading}
       />
 
       <input
         type="password"
-        placeholder="password"
-        value={jelszo}
-        onChange={(e) => setJelszo(e.target.value)}
-        disabled={toltes}
+        placeholder="Password (min. 6 characters)"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        disabled={loading}
       />
 
       <button 
         onClick={registerHandler} 
         style={{marginTop:"10px"}}
-        disabled={toltes}
+        disabled={loading}
       >
-        {toltes ? "Folyamatban..." : "Regisztráció"}
+        {loading ? "Processing..." : "Register"}
       </button>
-      <button>Goggle register</button>
+      
+      <button disabled={loading} className="google-btn">Register with Google</button>
     </div>
   )
 }
 
-export default Register
+export default Register;
