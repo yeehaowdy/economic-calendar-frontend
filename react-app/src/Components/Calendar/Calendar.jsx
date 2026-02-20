@@ -7,7 +7,9 @@ const Calendar = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [currentTime, setCurrentTime] = useState(new Date());
-
+  
+  const BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
+  
   const [filterCurrency, setFilterCurrency] = useState(() => {
     try {
       const saved = localStorage.getItem('mo-filter-currency');
@@ -36,7 +38,7 @@ const Calendar = () => {
   }, [filterCurrency, filterImpact, timeZone]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/calendar')
+    fetch(`${BASE_URL}/api/calendar`)
       .then(res => res.json())
       .then(data => {
         setEvents(Array.isArray(data) ? data : []);
