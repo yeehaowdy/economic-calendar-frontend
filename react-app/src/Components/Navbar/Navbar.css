@@ -1,0 +1,161 @@
+.mo-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mo-nav-container {
+  width: 100%;
+  /* Megnövelt max-width, hogy közelebb legyen a széléhez (vagy használd a 100%-ot) */
+  max-width: 1400px; 
+  padding: 0 30px; /* Több hely a széleken */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mo-nav-logo {
+  text-decoration: none;
+  color: #000;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.mo-nav-logo span {
+  font-weight: 400;
+  color: #666;
+}
+
+/* MENÜ IKON (HAMBURGER) */
+.mo-menu-trigger {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 2005; /* A sidebar felett kell legyen */
+  position: relative;
+}
+
+.mo-hamburger {
+  width: 24px;
+  height: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.mo-hamburger span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: #000;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mo-menu-trigger.active .mo-hamburger span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.mo-menu-trigger.active .mo-hamburger span:nth-child(2) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* OLDALSÁV (SIDEBAR) */
+.mo-nav-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px; /* Az oldalsáv szélessége */
+  height: 100vh;
+  background: #ffffff;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+  z-index: 2004;
+  display: flex;
+  flex-direction: column;
+  /* Jobbra kitolva alaphelyzetben */
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  padding-top: 80px; /* Hogy a logó/X gomb alatt induljon */
+}
+
+.mo-nav-sidebar.open {
+  transform: translateX(0);
+}
+
+.mo-sidebar-header {
+  padding: 0 30px 20px 30px;
+  border-bottom: 1px solid #f3f4f6;
+  margin-bottom: 20px;
+}
+
+.mo-sidebar-title {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #999;
+  letter-spacing: 0.1em;
+}
+
+.mo-sidebar-links {
+  display: flex;
+  flex-direction: column;
+}
+
+.mo-nav-link {
+  padding: 18px 30px;
+  text-decoration: none;
+  color: #000;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.mo-nav-link:hover {
+  background: #f9fafb;
+  padding-left: 35px; /* Kis játékos mozgás hoverre */
+}
+
+.mo-nav-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 15px 30px;
+}
+
+/* SÖTÉTÍTŐ OVERLAY */
+.mo-nav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* 50%-os sötétítés */
+  backdrop-filter: blur(2px); /* Enyhe homályosítás */
+  z-index: 2003;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.mo-nav-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (max-width: 600px) {
+  .mo-nav-sidebar {
+    width: 80%; /* Mobilon majdnem teliszélesség */
+  }
+  .mo-nav-container {
+    padding: 0 15px;
+  }
+}

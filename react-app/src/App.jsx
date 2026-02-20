@@ -4,7 +4,7 @@ import NavBar from './Components/Navbar/Navbar';
 import Login from './Components/Login/Login';
 import Calendar from './Components/Calendar/Calendar';
 import Register from './Components/Register/Register';
-import Profil from './Components/Profile/Profile';
+import Profile from './Components/Profile/Profile';
 import AdminPanel from './Components/AdminPanel/AdminPanel';
 
 
@@ -14,13 +14,13 @@ function App() {
     <>
        <nav>
           <Router>
-              {/*<NavBar />*/}
+              <NavBar />
               <Routes>
                 <Route path="/" element={<Calendar />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/calendar" element={<Calendar />} />
-                <Route path="/profil" element={<Profil />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route path="/admin_panel" element={<AdminPanel/>}/>
               </Routes>
           </Router>
