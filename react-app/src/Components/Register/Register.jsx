@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./Register.css";
 
 const Register = () => {
-  const URL = process.env.BACKEND_URL
+  const URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
   const [felhasznaloNev, setFelhasznaloNev] = useState("");
   const [jelszo, setJelszo] = useState("");
   const [hiba, setHiba] = useState("");

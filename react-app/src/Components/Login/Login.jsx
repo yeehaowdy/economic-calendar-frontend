@@ -9,7 +9,7 @@ const Login = () => {
 const [felhasznaloNev, setFelhasznaloNev] = useState("");
     const [jelszo, setJelszo] = useState("");
     const [hiba, setHiba] = useState("");
-    const URL = process.env.BACKEND_URL
+    const URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
 
 
     const location = useLocation();
