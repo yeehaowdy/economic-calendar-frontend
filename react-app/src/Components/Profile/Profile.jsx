@@ -1,80 +1,76 @@
 import React, { useState, useEffect } from 'react';
-import "./Profile.css";
 
-const Profile = () => {
-    const [userData, setUserData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
+const Profile = ({ userId }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const URL = process.env.REACT_APP_BACKEND_URL
 
-    const style1 = {
-        padding: "10px 20px",
-        cursor: "pointer",
-        backgroundColor: "#f44336",
-        color: "white",
-        border: "none",
-        borderRadius: "5px"
-    };
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                //ellenőrizzük van e bejelentkezett felhasználó
-                const user = auth.currentUser;
-                if (user) {
-                    const docRef = doc(db, "users", user.uid);
-                    const docSnap = await getDoc(docRef);
-
-                    if (docSnap.exists()) {
-                        setUserData(docSnap.data());
-                    } else {
-                        console.log("This document does not exist");
-                    }
-                } else {
-                    //visszairányítjuk a loginra
-                    navigate("/login");
-                }
-            } catch (error) {
-                console.error("Error when fetching data:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchUserData();
-    }, [navigate]);
-
-    const handleLogout = async () => {
-        try {
-            await signOut(auth);
-            navigate("/login");
-        } catch (error) {
-            console.error("Error when signing out:", error);
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        setLoading(true);
+        // Itt hívd meg a saját API végpontodat, ami a backend profile.js-t használja
+        const response = await fetch(`${URL}/api/user/${userId}`);
+        
+        if (!response.ok) {
+          throw new Error('Could not get profile data.');
         }
+
+        const result = await response.json();
+        
+        if (result.success) {
+          setUser(result.data);
+        } else {
+          setError(result.message);
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    if (loading) return <div className="users">Loading...</div>;
+    if (userId) {
+      fetchUserProfile();
+    }
+  }, [userId]);
 
-    return (
-        <div className="users">
-            <h2>Manage profile</h2>
-            
-            {userData ? (
-                <div className="profile-info">
-                    <img 
-                        src={userData.photoURL || "BACKEND!!"} 
-                        alt="Profile" 
-                        style={{ width: "150px", borderRadius: "50%", marginBottom: "10px" }}
-                    />
-                    <p><strong>Name:</strong> {userData.displayname}</p>
-                    <p><strong>Email:</strong> {userData.email}</p>
-                </div>
-            ) : (
-                <p>Could not find user data.</p>
-            )}
+  if (loading) return <div className="mo-status-container">Loading...</div>;
+  if (error) return <div className="mo-status-container mo-error">Error: {error}</div>;
 
-            <button onClick={handleLogout} style={style1}>Log out</button>
+  return (
+    <div className="profile-wrapper">
+      <header className="profile-header">
+        <div className="profile-pic-container">
+          <img 
+            className="profile-pic"
+            src={user.photoURL || 'https://via.placeholder.com/150'} 
+            alt="Profilkép" 
+          />
         </div>
-    );
+        <h1 className="profile-name">{user.displayName}</h1>
+        {user.admin && <span className="admin-badge">Admin:</span>}
+      </header>
+
+      <div className="profile-info-list">
+        <div className="profile-info-item">
+          <span className="info-label">System ID</span>
+          <span className="info-value">{user.id}</span>
+        </div>
+        
+        <div className="profile-info-item">
+          <span className="info-label">E-mail:</span>
+          <span className="info-value">{user.email}</span>
+        </div>
+
+        <div className="profile-info-item">
+          <span className="info-label">Display name:</span>
+          <span className="info-value">{user.displayName}</span>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Profile;
