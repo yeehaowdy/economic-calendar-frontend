@@ -3,13 +3,11 @@ import { useNavigate } from "react-router-dom";
 import "./Register.css";
 
 const Register = () => {
-  const URL = process.env.REACT_APP_BACKEND_URL;
-  
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); 
+  const URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
+  const [felhasznaloNev, setFelhasznaloNev] = useState("");
+  const [jelszo, setJelszo] = useState("");
+  const [hiba, setHiba] = useState("");
+  const [toltes, setToltes] = useState(false); 
 
   const navigate = useNavigate();
 
@@ -23,7 +21,6 @@ const Register = () => {
     setLoading(true);
 
     try {
-      // Ensure the URL matches your folder structure (e.g., /api/auth/register)
       const response = await fetch(`${URL}/api/auth/register`, {
         method: "POST",
         headers: {

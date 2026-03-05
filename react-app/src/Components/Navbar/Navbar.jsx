@@ -1,56 +1,55 @@
-import React from 'react'
-import { useState } from 'react';
-import { useNavigate, useLocation } from "react-router-dom";
-import "./Navbar.css";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import './Navbar.css';
 
 const Navbar = () => {
-  const [nyitva, setNyitva] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
 
- if (location.pathname === "/login") {
-   return null;
- }
-
-    if (location.pathname === "/users") {
-    return null;
-  }
-
-  const kilepes = () => {
-    localStorage.clear();
-    setNyitva(false);
-    navigate("/login");
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
   };
 
-  const isRegisterPage = location.pathname === "/register";
-
   return (
-    <div className="navbar-wrapper">
-    <nav className="navbar">
-      <button className="menu-gomb" onClick={() => setNyitva(!nyitva)}>
-        ☰
-      </button>
-      {nyitva && (
-        <div className="dropdown-menu">
-           {isRegisterPage ? (
-              <button onClick={() => { navigate("/login"); setNyitva(false); }}>
-                Belépés
-              </button>
-            ) : (
-              <>
-                <button onClick={() => { navigate("/profil"); setNyitva(false); }}>
-                  Fiók kezelés
-                </button>
-                <button style={{marginBottom:"10px"}} onClick={kilepes}>
-                  Kilépés
-                </button>
-              </>
-            )}
-        </div>
-      )}
-    </nav>
-  </div>
-  )
-}
+    <nav className="mo-navbar">
+      <div className="mo-nav-container">
+        {/* Bal oldal: Logo */}
+        <Link to="/" className="mo-nav-logo" onClick={() => setIsOpen(false)}>
+          IN<span>SIGHT</span>
+        </Link>
 
-export default Navbar
+        {/* Jobb oldal: Menü Gomb */}
+        <div className="mo-nav-menu-wrapper">
+          <button 
+            className={`mo-menu-trigger ${isOpen ? 'active' : ''}`} 
+            onClick={toggleMenu}
+            aria-label="Menu"
+          >
+            <div className="mo-hamburger">
+              <span></span>
+              <span></span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      {/* Sötétítő réteg (Overlay) - Most már sötétebb és animálható */}
+      <div className={`mo-nav-overlay ${isOpen ? 'visible' : ''}`} onClick={toggleMenu}></div>
+
+      {/* Becsúszó oldalsáv (Sidebar) */}
+      <div className={`mo-nav-sidebar ${isOpen ? 'open' : ''}`}>
+        <div className="mo-sidebar-header">
+           <span className="mo-sidebar-title">Menu</span>
+        </div>
+        <div className="mo-sidebar-links">
+          <Link to="/calendar" className="mo-nav-link" onClick={toggleMenu}>Calendar</Link>
+          <Link to="/profil" className="mo-nav-link" onClick={toggleMenu}>Profile</Link>
+          <Link to="/admin_panel" className="mo-nav-link" onClick={toggleMenu}>Admin Panel</Link>
+          <div className="mo-nav-divider"></div>
+          <Link to="/login" className="mo-nav-link mo-nav-auth" onClick={toggleMenu}>Login</Link>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;

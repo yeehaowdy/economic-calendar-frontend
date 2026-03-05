@@ -3,10 +3,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 import "./Login.css";
 
 const Login = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+const [felhasznaloNev, setFelhasznaloNev] = useState("");
+    const [jelszo, setJelszo] = useState("");
+    const [hiba, setHiba] = useState("");
+    const URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
+
 
     const URL = process.env.REACT_APP_BACKEND_URL;
     const location = useLocation();
@@ -25,11 +26,17 @@ const Login = () => {
         }
     }, [successMessage, navigate, location.pathname]);
 
-    const loginHandler = async () => {
-        if (!username || !password) {
-            setError("Please fill in all fields.");
-            return;
-        }
+  const login = async () => {
+    
+  try {
+    const response = await fetch(`${URL}/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+        username: felhasznaloNev, 
+        password: jelszo 
+      })
+    });
 
         setError("");
         setLoading(true);

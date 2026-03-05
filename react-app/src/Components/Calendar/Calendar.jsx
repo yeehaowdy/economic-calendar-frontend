@@ -7,7 +7,9 @@ const Calendar = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [currentTime, setCurrentTime] = useState(new Date());
-
+  
+  const BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
+  
   const [filterCurrency, setFilterCurrency] = useState(() => {
     try {
       const saved = localStorage.getItem('mo-filter-currency');
@@ -36,13 +38,16 @@ const Calendar = () => {
   }, [filterCurrency, filterImpact, timeZone]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/calendar")
+    fetch(`${BASE_URL}/api/calendar`)
       .then(res => res.json())
       .then(data => {
         setEvents(Array.isArray(data) ? data : []);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(err => {
+      console.error("Hiba:", err);
+      setLoading(false);
+    });
   }, []);
 
   const handleToggleFilter = (value, currentList, setList) => {
@@ -75,37 +80,45 @@ const Calendar = () => {
   }, [events, filterCurrency, filterImpact, selectedDate]);
 
   const currencies = useMemo(() => {
-  const otherCountries = [...new Set(events.map(e => e.country).filter(c => c && c !== 'All'))].sort();
-  return ['All', ...otherCountries];
+    const otherCountries = [...new Set(events.map(e => e.country).filter(c => c && c !== 'All'))].sort();
+    return ['All', ...otherCountries];
   }, [events]);
 
   if (loading) return <div className="mo-syncing">SYNCING...</div>;
 
   return (
     <div className="calendar-wrapper">
-      {/* Sötétítő réteg */}
       {showFilters && <div className="mo-overlay" onClick={() => setShowFilters(false)}></div>}
 
       <header className="mo-header">
         <div className="mo-header-inner">
-          <div className="mo-logo-group">
-            <div className="mo-logo">Economic Calendar</div>
-            <div className="mo-time-switcher">
-              <span className="mo-market-time">
-                {new Intl.DateTimeFormat('en-GB', {
-                  timeZone, hour: '2-digit', minute: '2-digit', second: '2-digit'
-                }).format(currentTime)}
-              </span>
-              <select className="mo-tz-select" value={timeZone} onChange={(e) => setTimeZone(e.target.value)}>
-                <option value="Europe/London">(UTC) London</option>
-                <option value="Europe/Budapest">(UTC+1) Budapest</option>
-                <option value="America/New_York">(UTC-5) New York</option>
-              </select>
-            </div>
+          {/* BAL OLDAL: Idő és Időzóna */}
+          <div className="mo-header-left">
+            <span className="mo-market-time">
+              {new Intl.DateTimeFormat('en-GB', {
+                timeZone, hour: '2-digit', minute: '2-digit', second: '2-digit'
+              }).format(currentTime)}
+            </span>
+            <select className="mo-tz-select" value={timeZone} onChange={(e) => setTimeZone(e.target.value)}>
+              <option value="Europe/London">UTC</option>
+              <option value="Europe/Budapest">UTC+1</option>
+              <option value="America/New_York">UTC-5</option>
+            </select>
           </div>
-          <button className="mo-btn-filter" onClick={() => setShowFilters(!showFilters)}>
-            {showFilters ? 'CLOSE' : 'FILTERS'}
-          </button>
+
+          {/* KÖZÉP: Aktuális dátum */}
+          <div className="mo-header-center">
+            <span className="mo-current-date-display">
+              {new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric' }).format(new Date(selectedDate))}
+            </span>
+          </div>
+
+          {/* JOBB OLDAL: Szűrő gomb */}
+          <div className="mo-header-right">
+            <button className="mo-btn-filter" onClick={() => setShowFilters(!showFilters)}>
+              {showFilters ? 'CLOSE' : 'FILTERS'}
+            </button>
+          </div>
         </div>
 
         <div className={`mo-filter-drawer ${showFilters ? 'open' : ''}`}>
@@ -153,12 +166,7 @@ const Calendar = () => {
       </header>
 
       <main className="mo-list-container">
-        
-        
         <div className="mo-day-group">
-          <div className="mo-day-header">
-            {new Intl.DateTimeFormat('en-GB', { weekday: 'long', month: 'long', day: 'numeric' }).format(new Date(selectedDate))}
-          </div>
           <div className="mo-pagination-group">
             <button className="mo-btn-action mo-btn-secondary" onClick={() => {
               const d = new Date(selectedDate); d.setDate(d.getDate() - 1); setSelectedDate(d.toISOString().split('T')[0]);
