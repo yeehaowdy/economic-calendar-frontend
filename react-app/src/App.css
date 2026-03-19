@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --mo-font-main: 'Plus Jakarta Sans', sans-serif;
+  --mo-black: #000000;
+  --mo-white: #ffffff;
+  --mo-gray-100: #f3f4f6;
+  --mo-gray-200: #e5e7eb;
+  --mo-gray-500: #999999;
+  --mo-gray-600: #666666;
+  --hover-gray: #333;
+  --mo-red: #ff4444;
+  --logout-red: #fff5f5;
+  --active-green: #09b537;
+  --bg-color: #ffffff;
+  --card-bg: #ffffff;
+  --text-main: #000000;
+  --text-sub: #666666;
+  --accent-blue: #0071FF;
+  --accent-purple: #8B5CF6;
+  --radius-xl: 32px;
+  --radius-md: 16px;
+  --admin: #00b731;
+}
+
+.calendar-wrapper, .auth-wrapper, .news-wrapper, .profile-wrapper, .home-wrapper, .market-wrapper {
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--mo-white);
+  color: var(--mo-black);
+  font-family: var(--mo-font-main);
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: block; 
+}
+
+.glow {
+  position: fixed;
+  width: 800px;
+  height: 800px;
+  border-radius: 50%;
+  filter: blur(120px);
+  z-index: -2;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.glow-1 { 
+  top: -200px; 
+  right: -200px; 
+  background: #10B981; 
+}
+
+.glow-2 { 
+  bottom: -200px; 
+  left: -200px; 
+  background: #334155; 
+}
+
+.bg-grid-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(var(--mo-gray-200) 1.5px, transparent 1.5px);
+  background-size: 40px 40px; 
+  z-index: -1;
+  pointer-events: none;
+}
+
+.footer-line {
+  height: 1px;
+  background: var(--mo-black);
+  margin-bottom: 30px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.footer-content span {
+  text-transform: none;
+}
+
+@media (max-width: 768px) {
+  .footer-content { flex-direction: column; gap: 10px; text-align: center; }
+  .bg-grid-layer { background-size: 20px 20px; }
+}
