@@ -8,7 +8,7 @@ const Calendar = () => {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [currentTime, setCurrentTime] = useState(new Date());
   
-  const BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
+  const BASE_URL = import.meta.env.VITE_BACKEND_URL;
   
   const [filterCurrency, setFilterCurrency] = useState(() => {
     try {
