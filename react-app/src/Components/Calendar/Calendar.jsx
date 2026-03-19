@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './Calendar.css';
+import '../Spinner.css'
 
 const Calendar = () => {
   const [events, setEvents] = useState([]);
@@ -7,9 +8,7 @@ const Calendar = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [currentTime, setCurrentTime] = useState(new Date());
-  
-  const BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
-  
+
   const [filterCurrency, setFilterCurrency] = useState(() => {
     try {
       const saved = localStorage.getItem('mo-filter-currency');
@@ -37,15 +36,19 @@ const Calendar = () => {
     localStorage.setItem('mo-timezone', timeZone);
   }, [filterCurrency, filterImpact, timeZone]);
 
+  const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+
   useEffect(() => {
-    fetch(`${BASE_URL}/api/calendar`)
+    fetch(`${API_URL}/api/calendar`)
       .then(res => res.json())
       .then(data => {
-        setEvents(Array.isArray(data) ? data : []);
-        setLoading(false);
+        setTimeout(() => {
+          setEvents(Array.isArray(data) ? data : []);
+          setLoading(false);
+        }, 500);
       })
       .catch(err => {
-      console.error("Hiba:", err);
+      console.error("Error:", err);
       setLoading(false);
     });
   }, []);
@@ -84,15 +87,28 @@ const Calendar = () => {
     return ['All', ...otherCountries];
   }, [events]);
 
-  if (loading) return <div className="mo-syncing">SYNCING...</div>;
+  if (loading) {
+    return (
+      <div className="mo-sync-container">
+        <div className="mo-sync-content">
+          <div className="mo-sync-spinner"></div>
+          <div className="mo-syncing-text">LOADING</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="calendar-wrapper">
       {showFilters && <div className="mo-overlay" onClick={() => setShowFilters(false)}></div>}
 
+      <div className="glow glow-1"></div>
+      <div className="glow glow-2"></div>
+
       <header className="mo-header">
+        
         <div className="mo-header-inner">
-          {/* BAL OLDAL: Idő és Időzóna */}
+
           <div className="mo-header-left">
             <span className="mo-market-time">
               {new Intl.DateTimeFormat('en-GB', {
@@ -106,14 +122,12 @@ const Calendar = () => {
             </select>
           </div>
 
-          {/* KÖZÉP: Aktuális dátum */}
           <div className="mo-header-center">
             <span className="mo-current-date-display">
-              {new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric' }).format(new Date(selectedDate))}
+              {new Intl.DateTimeFormat('en-US', { weekday: 'short', month: 'short', day: 'numeric' }).format(new Date(selectedDate))}
             </span>
           </div>
 
-          {/* JOBB OLDAL: Szűrő gomb */}
           <div className="mo-header-right">
             <button className="mo-btn-filter" onClick={() => setShowFilters(!showFilters)}>
               {showFilters ? 'CLOSE' : 'FILTERS'}

@@ -4,19 +4,23 @@
   left: 0;
   right: 0;
   height: 60px;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  background: rgba(255, 255, 255, 0.5); 
+  backdrop-filter: blur(10px); 
+  -webkit-backdrop-filter: blur(10px);
   z-index: 2000;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+.mo-navbar, .mo-nav-sidebar {
+  font-family: var(--mo-font-main);
+}
+
 .mo-nav-container {
   width: 100%;
-  /* Megnövelt max-width, hogy közelebb legyen a széléhez (vagy használd a 100%-ot) */
-  max-width: 1400px; 
-  padding: 0 30px; /* Több hely a széleken */
+  max-width: 100%; 
+  padding: 0 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -24,24 +28,28 @@
 
 .mo-nav-logo {
   text-decoration: none;
-  color: #000;
+  color: var(--mo-black);
   font-size: 30px;
+  font-family: var(--mo-font-main);
+  letter-spacing: -0.04em;
   font-weight: 800;
-  letter-spacing: -0.02em;
 }
 
 .mo-nav-logo span {
   font-weight: 400;
-  color: #666;
+  color: var(--mo-gray-500);
 }
 
-/* MENÜ IKON (HAMBURGER) */
+.mo-nav-logo:hover {
+  color: var(--mo-gray-500);
+}
+
 .mo-menu-trigger {
   background: transparent;
   border: none;
   cursor: pointer;
   padding: 10px;
-  z-index: 2005; /* A sidebar felett kell legyen */
+  z-index: 2005;
   position: relative;
 }
 
@@ -57,7 +65,7 @@
   display: block;
   width: 100%;
   height: 2px;
-  background-color: #000;
+  background-color: var(--mo-black);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -69,22 +77,20 @@
   transform: translateY(-6px) rotate(-45deg);
 }
 
-/* OLDALSÁV (SIDEBAR) */
 .mo-nav-sidebar {
   position: fixed;
   top: 0;
   right: 0;
-  width: 300px; /* Az oldalsáv szélessége */
+  width: 300px;
   height: 100vh;
-  background: #ffffff;
+  background: var(--mo-white);
   box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
   z-index: 2004;
   display: flex;
   flex-direction: column;
-  /* Jobbra kitolva alaphelyzetben */
   transform: translateX(100%);
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  padding-top: 80px; /* Hogy a logó/X gomb alatt induljon */
+  padding-top: 80px;
 }
 
 .mo-nav-sidebar.open {
@@ -113,7 +119,7 @@
 .mo-nav-link {
   padding: 18px 30px;
   text-decoration: none;
-  color: #000;
+  color: var(--mo-black);
   font-size: 16px;
   font-weight: 700;
   text-transform: uppercase;
@@ -122,7 +128,8 @@
 
 .mo-nav-link:hover {
   background: #f9fafb;
-  padding-left: 35px; /* Kis játékos mozgás hoverre */
+  color: var(--mo-gray-500);
+  padding-left: 35px;
 }
 
 .mo-nav-divider {
@@ -131,15 +138,14 @@
   margin: 15px 30px;
 }
 
-/* SÖTÉTÍTŐ OVERLAY */
 .mo-nav-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5); /* 50%-os sötétítés */
-  backdrop-filter: blur(2px); /* Enyhe homályosítás */
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
   z-index: 2003;
   opacity: 0;
   pointer-events: none;
@@ -153,9 +159,95 @@
 
 @media (max-width: 600px) {
   .mo-nav-sidebar {
-    width: 80%; /* Mobilon majdnem teliszélesség */
+    width: 80%;
   }
   .mo-nav-container {
     padding: 0 15px;
   }
+}
+
+.mo-user-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--mo-gray-500);
+  margin-top: 5px;
+  text-transform: lowercase;
+}
+
+.mo-logout-btn {
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  color: var(--mo-red) !important;
+  font-family: var(--mo-font-main);
+  border-radius: 0;
+}
+
+.mo-logout-btn:hover {
+  background: var(--logout-red) !important;
+}
+
+.mo-nav-divider {
+  height: 1px;
+  background: var(--mo-gray-100);
+  margin: 10px 30px;
+}
+
+.mo-nav-auth {
+  color: var(--mo-black);
+  font-weight: 800;
+}
+
+.mo-navbar.admin-mode {
+  background: rgba(10, 10, 10, 0.8);
+  border-bottom: 1px solid var(--admin);
+}
+
+.mo-navbar.admin-mode .mo-nav-logo {
+  color: #fff;
+}
+
+.mo-navbar.admin-mode .mo-hamburger span {
+  background-color: var(--admin);
+}
+
+.admin-mode ~ .mo-nav-sidebar, 
+.admin-mode .mo-nav-sidebar {
+  background: #111;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.admin-mode .mo-sidebar-header {
+  border-bottom: 1px solid #222;
+}
+
+.admin-mode .mo-sidebar-title {
+  color: var(--mo-gray-600);
+}
+
+.admin-mode .mo-user-badge {
+  color: var(--admin);
+}
+
+.admin-mode .mo-nav-link {
+  color: var(--mo-white);
+}
+
+.admin-mode .mo-nav-link:hover {
+  background: #1a1a1a;
+  color: var(--admin);
+}
+
+.admin-mode .mo-nav-divider {
+  background: #222;
+}
+
+.admin-mode .mo-nav-auth {
+  color: var(--admin);
+}
+
+.admin-mode .mo-logout-btn:hover {
+  background: #2a1111 !important;
 }

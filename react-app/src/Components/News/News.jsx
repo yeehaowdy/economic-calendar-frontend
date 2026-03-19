@@ -14,7 +14,7 @@ const News = () => {
   const [totalPages, setTotalPages] = useState(1);
   const limit = 12;
 
-  const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+  const API_URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     setLoading(true);

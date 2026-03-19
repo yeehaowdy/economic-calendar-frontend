@@ -1,25 +1,3 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-:root {
-  --mo-black: #000000;
-  --mo-white: #ffffff;
-  --mo-gray-100: #f3f4f6;
-  --mo-gray-200: #e5e7eb;
-}
-
-body {
-  background-color: var(--mo-white);
-  color: var(--mo-black);
-  font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
-  min-height: 100vh;
-  display: block; 
-}
-
 .calendar-wrapper {
   width: 100%;
   padding-top: 120px; 
@@ -31,11 +9,13 @@ body {
 
 .mo-header {
   position: fixed;
-  top: 60px; /* A navbar magassága */
+  top: 60px;
   left: 0; 
   right: 0;
   z-index: 1001; 
-  background: #ffffff;
+  background: transparent;
+  backdrop-filter: blur(10px); 
+  -webkit-backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -273,8 +253,8 @@ body {
 
 .mo-btn-clear {
   background: transparent;
-  border: 1px solid #ccc;
-  color: #666;
+  border: 1px solid var(--mo-gray-500);
+  color: var(--mo-gray-500);
   padding: 8px 16px;
   font-size: 12px;
   font-weight: 800;
@@ -284,15 +264,15 @@ body {
 }
 
 .mo-btn-clear:hover {
-  border-color: #000;
-  color: #000;
-  background: #f5f5f5;
+  border-color: var(--mo-black);
+  color: var(--mo-black);
+  background: var(--mo-white);
 }
 
 .mo-current-date-display {
   font-size: 14px;
   font-weight: 700;
-  color: #000;
+  color: var(--mo-black);
   text-transform: uppercase;
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -337,9 +317,9 @@ body {
 .mo-btn-action {
   flex: 1;
   padding: 14px;
-  background: #000;
-  color: #fff;
-  border: 1px solid #000;
+  background: var(--mo-black);
+  color: var(--mo-white);
+  border: 1px solid var(--mo-black);
   font-weight: 800;
   font-size: 14px;
   text-transform: uppercase;
@@ -347,14 +327,24 @@ body {
   cursor: pointer;
 }
 
-.mo-btn-secondary { background: #fff; color: #000; }
-.mo-btn-secondaryToday { flex: 0.5; background: #fff; color: #000; }
+.mo-btn-action:hover {
+  background: var(--hover-gray);
+  border: 1px solid var(--mo-gray-500);
+}
+
+.mo-btn-secondary { background: transparent; color: var(--mo-black); }
+.mo-btn-secondaryToday { flex: 0.5; background: transparent; color: var(--mo-black); }
+
+.mo-btn-secondaryToday:hover, .mo-btn-secondary:hover {
+  border: 1px solid var(--mo-black); 
+  background: var(--mo-white);
+}
 
 .mo-day-header {
   font-size: 16px;
   font-weight: 800;
   padding: 15px 0;
-  border-bottom: 2px solid #000;
+  border-bottom: 2px solid var(--mo-black);
   margin-bottom: 10px;
   text-transform: uppercase;
   text-align: center;
@@ -364,7 +354,7 @@ body {
   display: flex;
   align-items: center;
   padding: 16px 0;
-  border-bottom: 1px solid var(--mo-gray-100);
+  border-bottom: 1px solid var(--mo-gray-200);
 }
 
 .mo-time-col { width: 60px; flex-shrink: 0; }

@@ -1,0 +1,178 @@
+.admin-container {
+  padding: 100px 5% 50px;
+  background-color: #0a0a0a;
+  color: var(--mo-white);
+  min-height: 100vh;
+}
+
+.admin-header {
+  margin-bottom: 40px;
+  border-left: 4px solid var(--admin);
+  padding-left: 20px;
+}
+
+.admin-header span {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--mo-white);
+}
+
+.admin-form {
+  background: #151515;
+  padding: 30px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 50px;
+}
+
+.form-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.admin-form input, .admin-form textarea, .admin-form select {
+  background: #222;
+  border: 1px solid #333;
+  color: white;
+  padding: 12px;
+  border-radius: 4px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.cancel-btn {
+  background: transparent;
+  color: var(--mo-white);
+  border: 1px solid var(--mo-gray-600);
+  padding: 10px 20px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  color: var(--mo-gray-200);
+}
+
+.cancel-btn:hover {
+  background: var(--hover-gray);
+  border: 1px solid var(--mo-gray-500);
+  color: var(--mo-white);
+}
+
+.save-btn {
+  background: var(--admin);
+  border: 1px solid var(--mo-black);
+  font-weight: 700;
+  color: var(--mo-black);
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.save-btn:hover {
+  opacity: 0.9;
+  border: 1px solid var(--mo-black);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #151515;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.admin-table tr {
+  border-bottom: 1px solid #222;
+}
+
+.admin-table th, .admin-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #222;
+}
+
+.admin-table td {
+  padding: 12px 15px;
+  vertical-align: middle;
+}
+
+.admin-table th:last-child, 
+.admin-table td:last-child {
+  width: 180px;
+  text-align: center;
+  border: none;
+}
+
+.table-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: row;
+  border: none;
+}
+
+.edit-btn { background: #3498db; color: var(--mo-white); border: none; padding: 5px 10px; margin-right: 5px; cursor: pointer; }
+.delete-btn { background: #e74c3c; color: var(--mo-white); border: none; padding: 5px 10px; cursor: pointer; }
+
+.edit-btn, .delete-btn {
+  padding: 8px 15px;
+  border-radius: 4px;
+  font-size: 13px;
+  min-width: 70px;
+  transition: opacity 0.2s;
+}
+
+.edit-btn:hover, .delete-btn:hover {
+  opacity: 0.8;
+}
+
+.admin-tab-selector {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  background: transparent;
+  color: var(--mo-gray-200);
+  border: 1px solid var(--mo-gray-600);
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  background: var(--admin);
+  border: 1px solid var(--mo-black);
+  color: var(--mo-black);
+}
+
+.tab-btn:hover:not(.active) {
+  background: var(--hover-gray);
+  border: 1px solid var(--mo-gray-500);
+  color: var(--mo-white);
+}
+
+.tab-btn.active:hover {
+  opacity: 0.9;
+  border: 1px solid var(--mo-black);
+}
+
+@media (max-width: 500px) {
+  .table-actions {
+    flex-direction: column;
+    gap: 5px;
+  }
+  .edit-btn, .delete-btn {
+    width: 100%;
+    min-width: unset;
+    
+  }
+  
+  .admin-table td:last-child {
+    width: auto;
+  }
+}
