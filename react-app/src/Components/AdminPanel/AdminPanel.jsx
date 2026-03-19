@@ -61,7 +61,10 @@ const AdminPanel = () => {
       const res = await fetch(`${API_URL}/api/news/admin`);
       if (!res.ok) throw new Error(`Server Error: ${res.status}`);
       const data = await res.json();
-      setNews(Array.isArray(data) ? data : []);
+      const sorted = Array.isArray(data)
+        ? data.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate))
+        : [];
+      setNews(sorted);
       setLoading(false);
     } catch (err) {
       console.error("News fetching error:", err.message);
@@ -70,15 +73,18 @@ const AdminPanel = () => {
   };
 
   const fetchCalendar = async () => {
-    try {
-      const res = await fetch(`${API_URL}/api/calendar`);
-      if (!res.ok) throw new Error(`Server Error: ${res.status}`);
-      const data = await res.json();
-      setEvents(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error("Calendar fetching error:", err.message);
-    }
-  };
+  try {
+    const res = await fetch(`${API_URL}/api/calendar`);
+    if (!res.ok) throw new Error(`Server Error: ${res.status}`);
+    const data = await res.json();
+    const sorted = Array.isArray(data)
+      ? data.sort((a, b) => new Date(b.date) - new Date(a.date))
+      : [];
+    setEvents(sorted);
+  } catch (err) {
+    console.error("Calendar fetching error:", err.message);
+  }
+};
 
   const resetForms = () => {
     setEditingId(null);
