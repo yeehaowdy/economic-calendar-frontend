@@ -40,7 +40,7 @@
 
 .market-search-input {
   background: var(--mo-gray-100);
-  border: 1px solid var(--mo-gray-200);
+  border: 1px solid var(--mo-gray-500);
   padding: 12px 20px;
   border-radius: 10px;
   font-family: var(--mo-font-main);
@@ -49,6 +49,7 @@
   width: 250px;
   outline: none;
   transition: all 0.2s ease;
+  color: var(--mo-gray-500);
 }
 
 .market-search-input:focus {
